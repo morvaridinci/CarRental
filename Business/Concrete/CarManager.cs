@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,8 +25,13 @@ namespace Business.Concrete
             }
             else
             {
-                Console.WriteLine("Girdiğiniz Kriterler uygun değil....");
+                Console.WriteLine("Girdiğiniz Kriterler uygun değil.");
             }
+        }
+
+        public void Delete(Car car)
+        {
+            _carDal.Delete(car);
         }
 
         public List<Car> GetAll()
@@ -33,14 +39,19 @@ namespace Business.Concrete
             return _carDal.GetAll();
         }
 
-        public List<Car> GetByBrandId(int brandId)
-        {
-            return _carDal.GetAll(c=>c.BrandId == brandId);
-        }
-
         public List<Car> GetByColorId(int colorId)
         {
             return _carDal.GetAll(c=>c.ColorId==colorId);
+        }
+
+        public List<CarDetailDto> GetCarDetails()
+        {
+            return _carDal.GetCarDetails();
+        }
+
+        public void Update(Car car)
+        {
+            _carDal.Update(car);
         }
     }
 }
