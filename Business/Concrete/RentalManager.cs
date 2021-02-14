@@ -1,6 +1,6 @@
 ﻿using Business.Abstract;
 using Business.Constants;
-using Core.Utilities.Results;
+using Core.Utilities;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
@@ -20,30 +20,26 @@ namespace Business.Concrete
         }
         public IResult Add(Rental rental)
         {
-            var result = CheckReturnDate(rental.CarId);
-            if (!result.Success)
+            if (rental.ReturnDate == null)
             {
-                return new ErrorResult(result.Message);
+                return new ErrorResult(Messages.RantalAddingError);
             }
-            _rentalDal.Add(rental);
-            return new SuccessResult(result.Message);
+            else
+            {
+                _rentalDal.Add(rental);
+                return new SuccessResult(Messages.RantalAdded);
+            }
         }
 
         public IResult CheckReturnDate(int carId)
         {
-            var result = _rentalDal.GetRentalDetails(r => r.CarId == carId && r.ReturnDate == null);
-            if (result.Count > 0)
-            {
-                return new ErrorResult(Messages.NegativeMessage);
-            }
-            return new SuccessResult(Messages.PositiveMessage);
-
+            return new SuccessResult();
         }
 
         public IResult Delete(Rental rental)
         {
             _rentalDal.Delete(rental);
-            return new SuccessResult(Messages.PositiveMessage);
+            return new SuccessResult();
         }
 
         public IDataResult<List<Rental>> GetAll()
@@ -51,10 +47,6 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll());
         }
 
-        public IDataResult<Rental> GetById(int id)
-        {
-            return new SuccessDataResult<Rental>(_rentalDal.Get(r => r.Id == id));
-        }
 
         public IDataResult<List<RentalDetailDto>> GetRentalDetailsDto(int carId)
         {
@@ -64,20 +56,13 @@ namespace Business.Concrete
         public IResult Update(Rental rental)
         {
             _rentalDal.Update(rental);
-            return new SuccessResult(Messages.PositiveMessage);
+            return new SuccessResult();
+
         }
 
         public IResult UpdateReturnDate(int carId)
         {
-            var result = _rentalDal.GetAll(r => r.CarId == carId);
-            var updatedRental = result.LastOrDefault();
-            if (updatedRental.ReturnDate != null)
-            {
-                return new ErrorResult(Messages.NegativeMessage);
-            }
-            updatedRental.ReturnDate = DateTime.Now;
-            _rentalDal.Update(updatedRental);
-            return new SuccessResult(Messages.PositiveMessage);
+            return new SuccessResult();
         }
 
         

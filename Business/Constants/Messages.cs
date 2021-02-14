@@ -6,9 +6,9 @@ namespace Business.Constants
 {
     public static class Messages
     {
-        public static string PositiveMessage="islem  basarili";
-        public static string CarNameInvalid = "Urun ismi gecersizdir.";
-        public static string NegativeMessage = "islem  basarisizdir.";
-        public static string ColorsListed="renkler listelendi";
+        public static string BrandAdded = "Marka ekleme islemi basarili.";
+        public static string BrandListed = "Marka listeleme islemi basarili.";
+        public static string RantalAddingError = "Araba teslim edilmedigi icin kiralanamaz.";
+        public static string RantalAdded = "Kiralama basarili";
     }
 }

@@ -12,20 +12,45 @@ namespace ConsoleUI
         {
             // CarTest();
 
-            // BrandTest();
+             //BrandTest();
 
             // ColorTest();
+            //CustomerAdd();
+
+            GetAllRentalDetailList();
+        }
+        private static void GetAllRentalDetailList()
+        {
+            // RentalManager rentalManager = new RentalManager(new EfRentalDal());
+            //// Console.WriteLine("Kiralanan Arabalar Listesi: \nId\tCar Name\tCustomer Name\tRent Date\tReturn Date");
+            // var result = rentalManager.GetRentalDetails(1);
+            // if (result.Success == true)
+            // {
+            //     foreach (var rental in result.Data)
+            //     {
+            //         Console.WriteLine(rental.RentDate);
+            //        // +"\t" + rental.CarName + "\t" + rental.CustomerName + "\t" + rental.RentDate + "\t" + rental.ReturnDate
+            //     }
+            //     Console.WriteLine(result.Message);
+            // }
+
+            RentalManager rentalManager = new RentalManager(new EfRentalDal());
+            var result = rentalManager.GetAll();
+            if (result.Success == true)
+            {
+                foreach (var rental in result.Data)
+                {
+                    Console.WriteLine(rental.RentDate);
+                }
+            }
+        }
+        private static void CustomerAdd()
+        {
             CustomerManager customerManager = new CustomerManager(new EfCustomerDal());
-            /* foreach (var brand in brandManager.GetAll())
-             {
-                 Console.WriteLine(brand.BrandName);
-             }*/
 
-            customerManager.Add(new Customer { Id = 1, UserId = 1,CompanyName="fgh"});
-            customerManager.Add(new Customer { Id = 2, UserId = 2, CompanyName = "xyz" });
-            customerManager.Add(new Customer { Id = 3, UserId = 3, CompanyName = "abc" });
-
-
+            customerManager.Add(new Customer { CustomerId = 1, UserId = 1, CompanyName = "fgh" });
+            customerManager.Add(new Customer { CustomerId = 2, UserId = 2, CompanyName = "xyz" });
+            customerManager.Add(new Customer { CustomerId = 3, UserId = 3, CompanyName = "abc" });
         }
 
         private static void ColorTest()
@@ -40,12 +65,23 @@ namespace ConsoleUI
         private static void BrandTest()
         {
             BrandManager brandManager = new BrandManager(new EfBrandDal());
-            /* foreach (var brand in brandManager.GetAll())
-             {
-                 Console.WriteLine(brand.BrandName);
-             }*/
 
-            brandManager.Add(new Brand {BrandId=4 , BrandName="Nissan"});
+            //var result = brandManager.GetAll();
+            //if(result.Success == true)
+            //{
+            //    foreach (var brand in result.Data)
+            //    {
+            //        Console.WriteLine(brand.BrandName);
+            //    }
+            //    Console.WriteLine(result.Message);
+            //}
+
+            var result=brandManager.Add(new Brand { BrandId = 7, BrandName= "Alfa Romeo" });
+            if(result.Success == true)
+            {
+                Console.WriteLine(result.Message);
+            }
+
         }
 
         private static void CarTest()
@@ -59,7 +95,7 @@ namespace ConsoleUI
                  Console.WriteLine(car.CarId + "\t" + car.BrandId + "\t" + car.ColorId + "\t" + car.DailyPrice + "\t  " + car.ModelYear + "\t" + car.Description);
              }*/
 
-            var result = carManager.GetCarDetails();
+           /* var result = carManager.GetCarDetails();
             if(result.Success == true)
             {
                 foreach (var car in result.Data )
@@ -70,7 +106,7 @@ namespace ConsoleUI
             else
             {
                 Console.WriteLine(result.Message);
-            }
+            }*/
 
             
 

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Core.Utilities.Results
+namespace Core.Utilities
 {
     public class DataResult<T> : Result, IDataResult<T>
     {
-        public DataResult(T data,bool success, string message):base(success,message)
+        public DataResult(T data, bool success,string message):base(success,message)
         {
             Data = data;
         }
@@ -15,8 +15,6 @@ namespace Core.Utilities.Results
         {
             Data = data;
         }
-        
         public T Data { get; }
-
     }
 }
