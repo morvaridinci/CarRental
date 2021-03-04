@@ -11,5 +11,6 @@ namespace Business.Constants
         public static string RantalAddingError = "Araba teslim edilmedigi icin kiralanamaz.";
         public static string RantalAdded = "Kiralama basarili";
         public static string CarAdded = "Araba eklendi.";
+        public static string CarImageLimitExceeded="Bir arabanin en fazla bes fotografi olabilir.";
     }
 }
