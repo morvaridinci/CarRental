@@ -1,8 +1,6 @@
 ﻿using Business.Abstract;
-using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
-using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities;
 using Core.Utilities.Business;
@@ -25,10 +23,8 @@ namespace Business.Concrete
         {
             _carImageDal = carImageDal;
         }
-
-        [SecuredOperation("carimage.add,admin")]
+       
         [ValidationAspect(typeof(CarImageValidator))]
-        [CacheRemoveAspect("ICarImageService.Get")]
         public IResult Add(IFormFile file, CarImage carImage)
         {
             IResult result = BusinessRules.Run(CheckImageLimitExceeded(carImage.CarId));
@@ -42,9 +38,8 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
-
-        [SecuredOperation("image.delete,admin")]
-        [CacheRemoveAspect("ICarImageService.Get")]
+        
+        [ValidationAspect(typeof(CarImageValidator))]
         public IResult Delete(CarImage carImage)
         {
             FileHelper.Delete(carImage.ImagePath);
@@ -52,9 +47,8 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
+        
         [ValidationAspect(typeof(CarImageValidator))]
-        [SecuredOperation("image.update,admin")]
-        [CacheRemoveAspect("ICarImageService.Get")]
         public IResult Update(IFormFile file, CarImage carImage)
         {
             IResult result = BusinessRules.Run(CheckImageLimitExceeded(carImage.CarId));
@@ -74,14 +68,12 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<CarImage>(_carImageDal.Get(p => p.Id == id));
         }
-
-        [CacheAspect]
         public IDataResult<List<CarImage>> GetAll()
         {
             return new SuccessDataResult<List<CarImage>>(_carImageDal.GetAll());
         }
 
-        [CacheAspect]
+
         [ValidationAspect(typeof(CarImageValidator))]
         public IDataResult<List<CarImage>> GetImagesByCarId(int id)
         {
