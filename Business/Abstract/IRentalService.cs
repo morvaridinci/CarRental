@@ -17,6 +17,10 @@ namespace Business.Abstract
         IResult Update(Rental rental);
         IResult CheckReturnDate(int carId);
         IResult UpdateReturnDate(int carId);
-        
+
+        IResult IsAvailable(int id);
+
+        IResult TransactionalOperation(Rental rental);
+
     }
 }

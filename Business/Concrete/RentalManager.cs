@@ -1,69 +1,108 @@
-﻿using Business.Abstract;
+﻿
+using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
-using Core.CrossCuttingConcerns;
 using Core.Utilities;
+using Core.Utilities.Business;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Business.Concrete
 {
     public class RentalManager : IRentalService
     {
         IRentalDal _rentalDal;
+
+
         public RentalManager(IRentalDal rentalDal)
         {
             _rentalDal = rentalDal;
-        }
 
+        }
         [ValidationAspect(typeof(RentalValidator))]
+        [CacheRemoveAspect("IRentalService.Get")]
+        [SecuredOperation("admin,rental.add")]
         public IResult Add(Rental rental)
         {
-            ValidationTool.Validate(new RentalValidator(), rental);
+            IResult result = BusinessRules.Run(IsAvailable(rental.CarId));
+
+            if (result != null)
+            {
+                return result;
+            }
             _rentalDal.Add(rental);
-            return new ErrorResult(Messages.RantalAddingError);
+            return new SuccessResult(Messages.RentalAdded);
         }
-
-        public IResult CheckReturnDate(int carId)
-        {
-            return new SuccessResult();
-        }
-
+        [CacheRemoveAspect("IRentalService.Get")]
+        [SecuredOperation("admin,rental.delete")]
         public IResult Delete(Rental rental)
         {
             _rentalDal.Delete(rental);
-            return new SuccessResult();
+            return new SuccessResult(Messages.RentalDeleted);
         }
-
+        [CacheRemoveAspect("IRentalService.Get")]
+        [SecuredOperation("admin,rental.update")]
+        public IResult Update(Rental rental)
+        {
+            _rentalDal.Update(rental);
+            return new SuccessResult(Messages.RentalUpdated);
+        }
+        [CacheAspect]
         public IDataResult<List<Rental>> GetAll()
         {
             return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll());
         }
+        [CacheAspect]
+        public IDataResult<List<RentalDetailDto>> GetRentalDetails()
+        {
+            return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetRentalDetails());
+        }
+        [CacheAspect]
+        public IDataResult<Rental> GetById(int id)
+        {
+            return new SuccessDataResult<Rental>(_rentalDal.Get(r=>r.Id == id));
 
+        }
+        [TransactionScopeAspect]
+        public IResult TransactionalOperation(Rental rental)
+        {
+            _rentalDal.Update(rental);
+            _rentalDal.Add(rental);
+            return new SuccessResult();
+        }
+        public IResult IsAvailable(int id)
+        {
+
+            var result = _rentalDal.IsAvailable(id);
+            if (result)
+            {
+                return new SuccessResult(Messages.RentalCarAvailable);
+
+            }
+            return new ErrorResult(Messages.RentalCarNotAvailable);
+        }
 
         public IDataResult<List<RentalDetailDto>> GetRentalDetailsDto(int carId)
         {
-            return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetRentalDetails(r => r.CarId == carId));
+            throw new NotImplementedException();
         }
 
-        public IResult Update(Rental rental)
+        public IResult CheckReturnDate(int carId)
         {
-            _rentalDal.Update(rental);
-            return new SuccessResult();
-
+            throw new NotImplementedException();
         }
 
         public IResult UpdateReturnDate(int carId)
         {
-            return new SuccessResult();
+            throw new NotImplementedException();
         }
-
-        
     }
 }
+
