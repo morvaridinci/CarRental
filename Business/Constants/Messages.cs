@@ -21,5 +21,15 @@ namespace Business.Constants
         public static string SuccessfulLogin="Basarili giris";
         public static string UserAlreadyExists="Kullanici mevcut.";
         public static string AccessTokenCreated="Token olusturuldu";
+        public static string RentalAdded;
+        public static string RentalDeleted;
+        public static string RentalUpdated;
+        public static string RentalCarAvailable;
+        public static string RentalCarNotAvailable;
+        public static string UserDeleted;
+        public static string UsersListed;
+        public static string UserAdded;
+        public static string UserUpdated;
+        public static string UserListed;
     }
 }

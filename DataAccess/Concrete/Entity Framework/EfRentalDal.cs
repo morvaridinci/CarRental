@@ -38,5 +38,14 @@ namespace DataAccess.Concrete.Entity_Framework
 
             }
         }
+
+        public bool IsAvailable(int id)
+        {
+            using (MyDatabaseContext context = new MyDatabaseContext())
+            {
+                var result = context.Rentals.Any(r => r.Id == id && r.ReturnDate == null);
+                return result;
+            }
+        }
     }
 }
